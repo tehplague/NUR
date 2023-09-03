@@ -48,7 +48,7 @@ let
           Enhancing productivity for every C and C++
           developer on Linux, macOS and Windows.
         '';
-        maintainers = with maintainers; [ edwtjo mic92 ];
+        maintainers = with maintainers; [ tehplague ];
       };
     }).overrideAttrs (attrs: {
       nativeBuildInputs = (attrs.nativeBuildInputs or [ ]) ++ optionals (stdenv.isLinux) [
@@ -100,7 +100,7 @@ let
           It allows you to quickly migrate and refactor relational databases,
           construct efficient, statically checked SQL queries and much more.
         '';
-        maintainers = with maintainers; [ ];
+        maintainers = with maintainers; [ tehplague ];
       };
     });
 
@@ -116,7 +116,7 @@ let
           server with your local machine, downloads necessary components on the
           backend, and opens your project in JetBrains Client.
         '';
-        maintainers = with maintainers; [ kouyk ];
+        maintainers = with maintainers; [ tehplague ];
       };
     });
 
@@ -124,6 +124,10 @@ let
     (mkJetBrainsProduct {
       inherit pname version src wmClass jdk;
       product = "Goland";
+      extraWrapperArgs = [
+        # fortify source breaks build since delve compiles with -O0
+        ''--prefix CGO_CPPFLAGS " " "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"''
+      ];
       meta = with lib; {
         homepage = "https://www.jetbrains.com/go/";
         inherit description license platforms;
@@ -133,18 +137,13 @@ let
           The new IDE extends the IntelliJ platform with the coding assistance
           and tool integrations specific for the Go language
         '';
-        maintainers = [ ];
+        maintainers = with maintainers; [ tehplague ];
       };
     }).overrideAttrs (attrs: {
       postFixup = (attrs.postFixup or "") + lib.optionalString stdenv.isLinux ''
         interp="$(cat $NIX_CC/nix-support/dynamic-linker)"
-        patchelf --set-interpreter $interp $out/goland*/plugins/go/lib/dlv/linux/dlv
-
-        chmod +x $out/goland*/plugins/go/lib/dlv/linux/dlv
-
-        # fortify source breaks build since delve compiles with -O0
-        wrapProgram $out/bin/goland \
-          --prefix CGO_CPPFLAGS " " "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+        patchelf --set-interpreter $interp $out/goland/plugins/go-plugin/lib/dlv/linux/dlv
+        chmod +x $out/goland/plugins/go-plugin/lib/dlv/linux/dlv
       '';
     });
 
@@ -166,7 +165,7 @@ let
           with JUnit, TestNG, popular SCMs, Ant & Maven. Also known
           as IntelliJ.
         '';
-        maintainers = with maintainers; [ edwtjo gytis-ivaskevicius steinybot AnatolyPopov ];
+        maintainers = with maintainers; [ tehplague ];
         platforms = ideaPlatforms;
       };
     });
@@ -185,7 +184,7 @@ let
           parsers, and build DSL editors, such as ones with tables and
           diagrams.
         '';
-        maintainers = with maintainers; [ rasendubi ];
+        maintainers = with maintainers; [ tehplague ];
       };
     });
 
@@ -201,7 +200,7 @@ let
           with on-the-fly code analysis, error prevention and
           automated refactorings for PHP and JavaScript code.
         '';
-        maintainers = with maintainers; [ dritter ];
+        maintainers = with maintainers; [ tehplague ];
       };
     });
 
@@ -226,7 +225,7 @@ let
           providing you almost everything you need for your comfortable
           and productive development!
         '';
-        maintainers = with maintainers; [ ];
+        maintainers = with maintainers; [ tehplague ];
       };
     }).overrideAttrs (finalAttrs: previousAttrs: optionalAttrs cythonSpeedup {
       buildInputs = with python3.pkgs; [ python3 setuptools ];
@@ -258,7 +257,7 @@ let
           apps, services and libraries, Unity games, ASP.NET and
           ASP.NET Core web applications.
         '';
-        maintainers = with maintainers; [ raphaelr ];
+        maintainers = with maintainers; [ tehplague ];
       };
     }).overrideAttrs (attrs: {
       postPatch = lib.optionalString (!stdenv.isDarwin) (attrs.postPatch + ''
@@ -280,7 +279,7 @@ let
         homepage = "https://www.jetbrains.com/ruby/";
         inherit description license platforms;
         longDescription = description;
-        maintainers = with maintainers; [ edwtjo ];
+        maintainers = with maintainers; [ tehplague ];
       };
     });
 
@@ -296,7 +295,7 @@ let
           and CSS with on-the-fly code analysis, error prevention and
           automated refactorings for JavaScript code.
         '';
-        maintainers = with maintainers; [ abaldeau ];
+        maintainers = with maintainers; [ tehplague ];
       };
     }).overrideAttrs (attrs: {
       postPatch = (attrs.postPatch or "") + optionalString (stdenv.isLinux) ''
