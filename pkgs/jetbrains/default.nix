@@ -46,7 +46,7 @@ let
           Enhancing productivity for every C and C++
           developer on Linux, macOS and Windows.
         '';
-        maintainers = with maintainers; [ edwtjo mic92 tymscar ];
+        maintainers = with maintainers; [ edwtjo mic92 ];
       };
     }).overrideAttrs (attrs: {
       nativeBuildInputs = (attrs.nativeBuildInputs or [ ]) ++ lib.optionals (stdenv.isLinux) [
@@ -97,21 +97,6 @@ let
       };
     });
 
-  buildDataSpell = { pname, version, src, license, description, wmClass, buildNumber, ... }:
-    (mkJetBrainsProduct {
-      inherit pname version src wmClass jdk buildNumber;
-      product = "DataSpell";
-      meta = with lib; {
-        homepage = "https://www.jetbrains.com/dataspell/";
-        inherit description license platforms;
-        longDescription = ''
-          DataSpell is a new IDE from JetBrains built for Data Scientists.
-          Mainly it integrates Jupyter notebooks in the IntelliJ platform.
-        '';
-        maintainers = with maintainers; [ leona ];
-      };
-    });
-
   buildGateway = { pname, version, src, license, description, wmClass, buildNumber, product, ... }:
     (mkJetBrainsProduct {
       inherit pname version src wmClass jdk buildNumber product;
@@ -145,7 +130,7 @@ let
           The new IDE extends the IntelliJ platform with the coding assistance
           and tool integrations specific for the Go language
         '';
-        maintainers = with maintainers; [ tymscar ];
+        maintainers = with maintainers; [ ];
       };
     }).overrideAttrs (attrs: {
       postFixup = (attrs.postFixup or "") + lib.optionalString stdenv.isLinux ''
@@ -173,7 +158,7 @@ let
           with JUnit, TestNG, popular SCMs, Ant & Maven. Also known
           as IntelliJ.
         '';
-        maintainers = with maintainers; [ edwtjo gytis-ivaskevicius steinybot AnatolyPopov tymscar ];
+        maintainers = with maintainers; [ edwtjo gytis-ivaskevicius steinybot AnatolyPopov ];
         platforms = ideaPlatforms;
       };
     });
@@ -208,7 +193,7 @@ let
           with on-the-fly code analysis, error prevention and
           automated refactorings for PHP and JavaScript code.
         '';
-        maintainers = with maintainers; [ dritter tymscar ];
+        maintainers = with maintainers; [ dritter ];
       };
     });
 
@@ -233,7 +218,7 @@ let
           providing you almost everything you need for your comfortable
           and productive development!
         '';
-        maintainers = with maintainers; [ genericnerdyusername tymscar ];
+        maintainers = with maintainers; [ genericnerdyusername ];
       };
     }).overrideAttrs (finalAttrs: previousAttrs: lib.optionalAttrs cythonSpeedup {
       buildInputs = with python3.pkgs; [ python3 setuptools ];
@@ -287,7 +272,7 @@ let
         homepage = "https://www.jetbrains.com/ruby/";
         inherit description license platforms;
         longDescription = description;
-        maintainers = with maintainers; [ edwtjo tymscar ];
+        maintainers = with maintainers; [ edwtjo ];
       };
     });
 
@@ -303,7 +288,7 @@ let
           and CSS with on-the-fly code analysis, error prevention and
           automated refactorings for JavaScript code.
         '';
-        maintainers = with maintainers; [ abaldeau tymscar ];
+        maintainers = with maintainers; [ abaldeau ];
       };
     });
 
@@ -338,20 +323,6 @@ in
     };
     wmClass = "jetbrains-datagrip";
     update-channel = products.datagrip.update-channel;
-  };
-
-  dataspell = buildDataSpell rec {
-    pname = "dataspell";
-    version = products.dataspell.version;
-    buildNumber = products.dataspell.build_number;
-    description = "The IDE for Professional Data Scientists";
-    license = lib.licenses.unfree;
-    src = fetchurl {
-      url = products.dataspell.url;
-      sha256 = products.dataspell.sha256;
-    };
-    wmClass = "jetbrains-dataspell";
-    update-channel = products.dataspell.update-channel;
   };
 
   gateway = buildGateway rec {
